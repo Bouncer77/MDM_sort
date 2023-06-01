@@ -13,11 +13,21 @@ import java.util.TreeMap;
 @Component
 public class CommandLineRunnerImpl implements CommandLineRunner {
 
+    public static final String FILE_INPUT_NAME = "input.txt";
+    public static final String FILE_OUTPUT_NAME = "output.txt";
+
     @Override
     public void run(String... args) {
         System.out.println("In CommandLineRunnerImpl ");
         Arrays.stream(args).forEach(System.out::println);
-        Map<String, String> map = readMdmUnicodeClassic(args[0]);
+
+        Map<String, String> map = null;
+        if (args.length == 0) {
+            map = readMdmUnicodeClassic(FILE_INPUT_NAME);
+        } else {
+            map = readMdmUnicodeClassic(args[0]);
+        }
+
         for (Map.Entry<String, String> entry : map.entrySet()) {
             System.out.println(entry.getKey() + ":" + entry.getValue());
         }
@@ -26,7 +36,7 @@ public class CommandLineRunnerImpl implements CommandLineRunner {
     }
 
     public static void writeMdmUnicodeClassic(Map<String, String> map) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("output.txt"))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_OUTPUT_NAME))) {
             for (Map.Entry<String, String> entry : map.entrySet()) {
                 writer.write(entry.getKey() + "-" + entry.getValue() + "\n");
             }
